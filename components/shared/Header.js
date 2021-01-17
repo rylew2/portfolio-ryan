@@ -6,8 +6,8 @@ class Header extends Component {
   render() {
     const title = this.props.title;
     return (
-      <>
-        <p>{title}</p>
+      <> 
+        <p>{title} .</p>
         {this.props.children}
         <p className="customClass">I am styled P element</p>
         <p className="customClassFromFile">I am styled P element</p>
