@@ -1,54 +1,95 @@
-import React, { Component } from "react";
 import Link from "next/link";
-import '../../styles/main.scss'
+import React, { useState } from "react";
+import {
+  Collapse,
+  Nav,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
+  NavItem,
+} from "reactstrap";
+import auth0 from "../../services/auth0";
 
-class Header extends Component {
-  render() {
-    const title = this.props.title;
-    return (
-      <> 
-        <p>{title} .</p>
-        {this.props.children}
-        <p className="customClass">I am styled P element</p>
-        <p className="customClassFromFile">I am styled P element</p>
-        <div>
-          <Link href="/">
-            <a style={{ fontSize: "20px" }}>home</a>
-          </Link>
-        </div>
-        <div>
-          <Link href="/about">
-            <a>about</a>
-          </Link>
-        </div>
-        <div>
-          <Link href="/blog">
-            <a>blog</a>
-          </Link>
-        </div>
-        <div>
-          <Link href="/cv">
-            <a>cv</a>
-          </Link>
-        </div>
-        <div>
-          <Link href="/portfolio">
-            <a>portfolio</a>
-          </Link>
-        </div>
-        <style jsx>
-          {`
-            a {
-              font-size: 20px;
-            }
-            .customClass {
-              color: red;
-            }
-          `}
-        </style>
-      </>
-    );
-  }
-}
+const BsNavLink = (props) => {
+  const { route, title } = props;
+  return (
+    <Link href={route}>
+      <a className="nav-link port-navbar-link">{title}</a>
+    </Link>
+  );
+};
+
+const Login = () => {
+  return (
+    <span onClick={auth0.login} className="nav-link port-navbar-link clickable">
+      Login
+    </span>
+  );
+};
+
+const Logout = () => {
+  return (
+    <span
+      onClick={auth0.logout}
+      className="nav-link port-navbar-link clickable"
+    >
+      Logout
+    </span>
+  );
+};
+
+const Header = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => setIsOpen(!isOpen);
+  const { isAuthenticated } = props;
+
+  return (
+    <div>
+      <Navbar
+        className="port-navbar port-default absolute"
+        color="transparent"
+        dark
+        expand="md"
+      >
+        <NavbarBrand className="port-navbar-brand" href="/">
+          Ryan Lewis
+        </NavbarBrand>
+        <NavbarToggler onClick={toggle} />
+        <Collapse isOpen={isOpen} navbar>
+          <Nav className="ml-auto" navbar>
+            <NavItem className="port-navbar-brand">
+              <BsNavLink route="/" title="Home" />
+            </NavItem>
+            <NavItem className="port-navbar-brand">
+              <BsNavLink route="/about" title="About" />
+            </NavItem>
+            <NavItem className="port-navbar-brand">
+              <BsNavLink route="/portfolios" title="Portfolio" />
+            </NavItem>
+            <NavItem className="port-navbar-brand">
+              <BsNavLink route="/blog" title="Blog" />
+            </NavItem>
+            <NavItem className="port-navbar-brand">
+              <BsNavLink route="/cv" title="CV" />
+            </NavItem>
+            {!auth0.isAuthenticated() && (
+              <NavItem className="port-navbar-brand">
+                <Login />
+              </NavItem>
+            )}
+
+            {auth0.isAuthenticated() && (
+              <NavItem className="port-navbar-brand">
+                <Logout />
+              </NavItem>
+            )}
+          </Nav>
+          {/* <NavbarText>Simple Text</NavbarText> */}
+        </Collapse>
+      </Navbar>
+    </div>
+  );
+};
 
 export default Header;
