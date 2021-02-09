@@ -1,6 +1,8 @@
 // import { useAuth0 } from "@auth0/auth0-react";
 import auth0 from "auth0-js";
+import axios from "axios";
 import Cookies from "js-cookie";
+import jwt from "jsonwebtoken";
 
 class Auth0 {
   constructor() {
@@ -14,7 +16,7 @@ class Auth0 {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
-    this.isAuthenticated = this.isAuthenticated.bind(this);
+    // this.isAuthenticated = this.isAuthenticated.bind(this);
 
     // const newlogout = useAuth0.logout;
   }
@@ -26,6 +28,7 @@ class Auth0 {
     // debugger;
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => {
+        // debugger;
         if (authResult && authResult.accessToken && authResult.idToken) {
           this.setSession(authResult);
           // history.replaceState("/home");
@@ -44,10 +47,14 @@ class Auth0 {
   setSession(authResult) {
     // debugger;
     //Save tokens
-    // authResult.expiresIn is in milliseconds - transform into seconds
+
+    // authResult.expiresIn is in milliseconds,
+    // this statement transform into seconds (turn to seconds and add to current date)
     const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime()
     );
+
+    // Got rid of localStorage
     // localStorage.setItem("access_token", authResult.accessToken);
     // localStorage.setItem("id_token", authResult.idToken);
     // localStorage.setItem("expires_at", expiresAt);
@@ -74,37 +81,89 @@ class Auth0 {
 
   // check whether current time is past Access Token expiry time
   // if it is we are authenticated
-  isAuthenticated() {
-    const expiresAt = Cookies.getJSON("expiresAt");
-    return new Date().getTime() < expiresAt;
+  // isAuthenticated() {
+  //   const expiresAt = Cookies.getJSON("expiresAt");
+  //   return new Date().getTime() < expiresAt;
+  // }
+
+  // get set of public keys for signing a token
+  async getJWKS() {
+    const res = await axios.get(
+      "https://dev-2osrhxob.us.auth0.com/.well-known/jwks.json"
+    );
+    const jwks = res.data;
+    // console.log("in here jwks", jwks);
+    return jwks;
+  }
+
+  // for a more secure check we added this function
+  // to actually use/decode the jwt cookie
+
+  // 1 - get JWKS (the set of public keys from auth0) - there is a jwks endpoint for each auth0 tenant
+  // 2- extract jwt from request authorization header
+  // 3 - decode jwt and grab kid property (kid is the key id property - indicates which key was used to secure signature)
+  // 4 - find the signing key in jwks w/ a matching kid property
+  // 5 - use x5c property tot build a certificate to verify JWT signature
+  async verifyToken(token) {
+    if (token) {
+      const decodedToken = jwt.decode(token, { complete: true }); //complete true gives us token header parameters (need kid)
+
+      if (!decodedToken) {
+        // if token is corrupt or can't be decoded
+        return undefined;
+      }
+
+      const jwks = await this.getJWKS();
+      const jwk = jwks.keys[0];
+
+      // BUILD CERTIFICATE
+      let cert = jwk.x5c[0]; //get x5c property
+
+      //split result into lines of 64 char
+      cert = cert.match(/.{1,64}/g).join("\n"); // match returns an array, join each array element with a newline
+      cert = `-----BEGIN CERTIFICATE-----\n${cert}\n-----END CERTIFICATE-----\n`;
+
+      if (jwk.kid === decodedToken.header.kid) {
+        try {
+          const verifiedToken = jwt.verify(token, cert);
+          const expiresAt = verifiedToken.exp * 1000;
+
+          return verifiedToken && new Date().getTime() < expiresAt
+            ? verifiedToken
+            : undefined;
+        } catch (err) {
+          return undefined;
+        }
+      }
+    }
+
+    return undefined;
   }
 
   async clientAuth() {
-    return this.isAuthenticated();
-    // const token = Cookies.getJSON("jwt");
-    // const verifiedToken = await this.verifyToken(token);
+    const token = Cookies.getJSON("jwt");
+    const verifiedToken = await this.verifyToken(token);
+    return verifiedToken;
 
-    // return verifiedToken;
+    // return this.isAuthenticated();
   }
 
   async serverAuth(req) {
     if (req.headers.cookie) {
-      const expiresAtCookie = req.headers.cookie
+      const tokenCookie = req.headers.cookie
         .split(";")
-        .find((c) => c.trim().startsWith("expiresAt="));
+        .find((c) => c.trim().startsWith("jwt="));
 
-      if (!expiresAtCookie) {
+      if (!tokenCookie) {
         return undefined;
       }
-      const expiresAt = expiresAtCookie.split("=")[1];
-      return new Date().getTime() < expiresAt;
-      //   const token = getCookieFromReq(req, "jwt");
-      //   const verifiedToken = await this.verifyToken(token);
 
-      //   return verifiedToken;
+      const token = tokenCookie.split("=")[1];
+      const verifiedToken = await this.verifyToken(token);
+      return verifiedToken;
     }
 
-    // return undefined;
+    return undefined;
   }
 }
 
