@@ -5,9 +5,14 @@ import withAuth from "../components/hoc/withAuth";
 import BaseLayout from "../components/layouts/BaseLayout";
 
 class Secret extends Component {
-  static getInitialProps() {
-    const superSecretValue = "Super Secret Value";
-    return { superSecretValue };
+  // getInitialProps receives a single object argument - one of the obj keys is req
+  // destructure req
+  static async getInitialProps({ req }) {
+    // const superSecretValue = "Super Secret Value";
+
+    const anotherSecretData = await getSecretData(req);
+    console.log(anotherSecretData);
+    return { anotherSecretData };
   }
 
   constructor(props) {
@@ -17,6 +22,7 @@ class Secret extends Component {
 
   async componentDidMount() {
     const secretData = await getSecretData();
+    // console.log(secretData);
     this.setState({ secretData });
   }
 
@@ -24,9 +30,9 @@ class Secret extends Component {
     const { secretData } = this.state;
     // debugger;
     if (secretData && secretData.length > 0) {
-      return secretData.map((data) => {
+      return secretData.map((data, idx) => {
         return (
-          <div>
+          <div key={idx}>
             <p>{data.title}</p>
             <p>{data.description}</p>
           </div>
@@ -38,7 +44,7 @@ class Secret extends Component {
 
   render() {
     const { superSecretValue } = this.props;
-    // debugger;
+    console.log(this.props);
     console.log(this.state);
     return (
       <BaseLayout {...this.props.auth}>
@@ -54,4 +60,4 @@ class Secret extends Component {
   }
 }
 
-export default withAuth(Secret);
+export default withAuth()(Secret);

@@ -19,3 +19,20 @@ exports.checkJWT = jwt({
   issuer: "https://dev-2osrhxob.us.auth0.com/", //auth0 domain  w/ https
   algorithms: ["RS256"],
 });
+
+const namespace = "http://localhost:3000/";
+
+exports.checkRole = (role) => {
+  return (req, res, next) => {
+    const user = req.user;
+
+    if (user && user[namespace + "role"] === role) {
+      next();
+    } else {
+      return res.status(401).send({
+        title: "Not Authorized",
+        details: "You are not authorized to access this data",
+      });
+    }
+  };
+};
