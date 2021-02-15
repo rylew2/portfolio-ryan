@@ -2,6 +2,7 @@
 @import "./index";
 @import "./header";
 @import "./shared/colors";
+@import "./portfolios";
 
 // PAGES
 html,
@@ -35,7 +36,7 @@ body {
 
 .base-page {
   padding-top: 150px;
-  color: white;
+  color: black;
   background-color: #ecedee;
   min-height: 100vh;
   .page-header {
