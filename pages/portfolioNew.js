@@ -3,7 +3,7 @@ import BasePage from "../components/BasePage";
 import BaseLayout from "../components/layouts/BaseLayout";
 import PortfolioCreateForm from "../components/portfolios/PortfolioCreateForm";
 import withAuth from "../components/hoc/withAuth";
-
+import { Row, Col } from "reactstrap";
 class PortfolioNew extends Component {
   render() {
     return (
@@ -12,7 +12,11 @@ class PortfolioNew extends Component {
           className="portfolio-create-page"
           title="Create new Portfolio"
         >
-          <PortfolioCreateForm />
+          <Row>
+            <Col md="6">
+              <PortfolioCreateForm />
+            </Col>
+          </Row>
         </BasePage>
       </BaseLayout>
     );

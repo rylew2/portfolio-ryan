@@ -5,7 +5,7 @@ import BaseLayout from "../layouts/BaseLayout";
 const namespace = "http://localhost:3000/";
 
 // Higher order component that if used, will allow
-export default  (role) => {
+export default (role) => {
   return (Component) => {
     return class withAuth extends React.Component {
       static async getInitialProps(args) {
@@ -64,4 +64,4 @@ export default  (role) => {
       }
     };
   };
-}
+};
