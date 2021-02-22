@@ -1,11 +1,10 @@
-// Render Prop
 import { Field, Form, Formik } from "formik";
 import moment from "moment";
 import React from "react";
-// import { Button, FormGroup, Label } from 'reactstrap';
-import { Button } from "reactstrap";
+import { Alert, Button } from "reactstrap";
 import PortDate from "../form/PortDate";
 import PortInput from "../form/PortInput";
+
 const validateInputs = (values) => {
   let errors = {};
 
@@ -34,12 +33,13 @@ const INITIAL_VALUES = {
   startDate: "",
   endDate: "",
 };
-const PortfolioCreateForm = (props) => (
+
+const PortfolioCreateForm = ({ initialValues, onSubmit, error }) => (
   <div>
     <Formik
-      initialValues={INITIAL_VALUES}
+      initialValues={initialValues}
       validate={validateInputs}
-      onSubmit={props.onSubmit}
+      onSubmit={onSubmit}
     >
       {({ isSubmitting }) => (
         <Form>
@@ -68,19 +68,20 @@ const PortfolioCreateForm = (props) => (
             name="description"
             component={PortInput}
           />
-          <Field label="Start Date" name="startDate" component={PortDate} />
           <Field
+            initialDate={initialValues.startDate}
+            label="Start Date"
+            name="startDate"
+            component={PortDate}
+          />
+          <Field
+            initialDate={initialValues.endDate}
             label="End Date"
-            canBeDisabled={true}
             name="endDate"
             component={PortDate}
           />
-          <Button
-            color="success"
-            size="lg"
-            type="submit"
-            disabled={isSubmitting}
-          >
+          {error && <Alert color="danger">{error}</Alert>}
+          <Button type="submit" disabled={isSubmitting}>
             Create
           </Button>
         </Form>

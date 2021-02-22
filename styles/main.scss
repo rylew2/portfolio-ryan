@@ -1,10 +1,14 @@
 @import "./shared/fonts";
-@import "./index";
-@import "./header";
 @import "./shared/colors";
-@import "./portfolios";
 
-// PAGES
+//PAGES
+@import "./index";
+@import "./portfolios";
+@import "./blogs";
+
+//COMPONENTS
+@import "./header";
+
 html,
 body {
   font-family: "Montserrat", "Helvetica";

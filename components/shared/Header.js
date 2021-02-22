@@ -84,9 +84,9 @@ const Header = (props) => {
                 <Logout />
               </NavItem>
             )}
-            {isAuthenticated && (
+            {/* {isAuthenticated && (
               <span className="nav-link port-navbar-link">{user.name}</span>
-            )}
+            )} */}
           </Nav>
           {/* <NavbarText>Simple Text</NavbarText> */}
         </Collapse>

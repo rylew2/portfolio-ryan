@@ -8,11 +8,14 @@ import { Button, FormGroup, Label } from "reactstrap";
 export default class PortDate extends Component {
   constructor(props) {
     super(props);
+
+    const dateValue = props.initialDate ? moment(props.initialDate) : moment();
     this.state = {
       // dateValue: new Date(),
-      dateValue: moment(),
+      dateValue: dateValue,
       isHidden: false,
     };
+    // debugger;
   }
 
   setFieldValueAndtouched(date, touched) {

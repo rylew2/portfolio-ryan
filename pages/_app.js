@@ -18,8 +18,11 @@ class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
-
-    const auth = { user, isAuthenticated: !!user };
+    const namespace = process.env.NAMESPACE
+      ? process.env.NAMESPACE
+      : "http://localhost:3000";
+    const isSiteOwner = user && user[namespace + "/role"] === "siteOwner";
+    const auth = { user, isAuthenticated: !!user, isSiteOwner };
     // console.log("auth: ", auth);
     // console.log("pageProps", pageProps);
     return { pageProps, auth };

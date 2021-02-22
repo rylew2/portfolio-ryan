@@ -16,6 +16,7 @@ class Index extends Component {
       "React.js",
     ];
   }
+  
 
   render() {
     const { isAuthenticated, user } = this.props.auth;

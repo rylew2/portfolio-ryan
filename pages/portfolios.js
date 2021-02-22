@@ -1,69 +1,98 @@
-import axios from "axios";
-import Link from "next/link";
-import React, { Component } from "react";
+import React from "react";
+import { Button, Col, Row } from "reactstrap";
+import { deletePortfolio, getPortfolios } from "../actions";
 import BasePage from "../components/BasePage";
 import BaseLayout from "../components/layouts/BaseLayout";
-import {
-  Col,
-  Row,
-  Card,
-  CardHeader,
-  CardBody,
-  CardText,
-  CardTitle,
-} from "reactstrap";
-class Portfolios extends Component {
+import PortfolioCard from "../components/portfolios/PortfolioCard";
+import { Router } from "../routes";
+
+class Portfolios extends React.Component {
   static async getInitialProps() {
-    let posts = [];
-    console.log("getInitialProps");
-    let userData = {};
+    let portfolios = [];
+
     try {
-      const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts"
-      );
-      posts = response.data;
-    } catch (error) {
-      console.log(error);
+      portfolios = await getPortfolios();
+    } catch (err) {
+      console.error(err);
     }
 
-    return { posts: posts.splice(0, 10) };
+    return { portfolios };
   }
 
-  renderPosts(posts) {
-    return posts.map((p, index) => {
+  navigateToEdit(portfolioId, e) {
+    e.stopPropagation();
+    Router.pushRoute(`/portfolios/${portfolioId}/edit`);
+  }
+
+  displayDeleteWarning(portfolioId, e) {
+    e.stopPropagation();
+    const isConfirm = confirm(
+      "Are you sure you want to delete this portfolio???"
+    );
+
+    if (isConfirm) {
+      this.deletePortfolio(portfolioId);
+    }
+  }
+
+  deletePortfolio(portfolioId) {
+    deletePortfolio(portfolioId)
+      .then(() => {
+        Router.pushRoute("/portfolios");
+      })
+      .catch((err) => console.error(err));
+  }
+
+  renderPortfolios(portfolios) {
+    const { isAuthenticated, isSiteOwner } = this.props.auth;
+
+    return portfolios.map((portfolio, index) => {
       return (
-        <Col md="4">
-          <React.Fragment key={index}>
-            <span>
-              <Card className="portfolio-card">
-                <CardHeader className="portfolio-card-header">
-                  Some Position {index}
-                </CardHeader>
-                <CardBody>
-                  <p className="portfolio-card-city"> Some Location {index} </p>
-                  <CardTitle className="portfolio-card-title">
-                    Some Company {index}
-                  </CardTitle>
-                  <CardText className="portfolio-card-text">
-                    Some Description {index}
-                  </CardText>
-                  <div className="readMore"> </div>
-                </CardBody>
-              </Card>
-            </span>
-          </React.Fragment>
+        <Col key={index} md="4">
+          <PortfolioCard portfolio={portfolio}>
+            {isAuthenticated && isSiteOwner && (
+              <>
+                <Button
+                  onClick={(e) => this.navigateToEdit(portfolio._id, e)}
+                  color="warning"
+                >
+                  Edit
+                </Button>{" "}
+                <Button
+                  onClick={(e) => this.displayDeleteWarning(portfolio._id, e)}
+                  color="danger"
+                >
+                  Delete
+                </Button>
+              </>
+            )}
+          </PortfolioCard>
         </Col>
       );
     });
   }
 
   render() {
-    const { posts } = this.props;
+    const { portfolios } = this.props;
+    const { isAuthenticated, isSiteOwner } = this.props.auth;
+    // console.log(isAuthenticated, isSiteOwner);
+    // console.log(this.props.auth);
     return (
-      <BaseLayout {...this.props.auth}>
-        {" "}
-        <BasePage className="portfolio-page" title="Portfolio">
-          <Row>{this.renderPosts(posts)}</Row>
+      <BaseLayout
+        title="Ryan Lewis - Learn About My Experience"
+        {...this.props.auth}
+      >
+        <BasePage className="portfolio-page" title="Portfolios">
+          {isAuthenticated && isSiteOwner && (
+            <Button
+              onClick={() => Router.pushRoute("/portfolios/new")}
+              color="success"
+              className="create-port-btn"
+            >
+              Create New Portfolio Item
+            </Button>
+          )}
+          <Row>{this.renderPortfolios(portfolios)}</Row>
         </BasePage>
       </BaseLayout>
     );
