@@ -17,26 +17,14 @@ class Blogs extends React.Component {
       console.error(err);
     }
 
+    console.log(blogs);
+
     return { blogs };
   }
 
   renderBlogs = (blogs) => {
-    let myblogs = [
-      {
-        title: "my title",
-        subTitle: "subtitle",
-        author: "Rylew",
-        createdAt: "2012",
-      },
-      {
-        title: "another title",
-        subTitle: "subtitle",
-        author: "ryan",
-        createdAt: "2017",
-      },
-    ];
-    console.log(myblogs);
-    myblogs.map((blog, index) => (
+    console.log(blogs);
+    blogs.map((blog, index) => (
       <div key={index} className="post-preview">
         <Link route={`/blogs/${blog.slug}`}>
           <a>

@@ -18,6 +18,7 @@ const BasePage = (props) => {
 };
 BasePage.defaultProps = {
   className: "",
+  containerClass: "",
 };
 // BasePage.PropTypes = {
 //   className: PropTypes.any.isRequired,

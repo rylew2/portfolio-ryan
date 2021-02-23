@@ -17,12 +17,11 @@ class BlogEditor extends React.Component {
 
     this.state = {
       isSaving: false,
-      lockId: Math.floor(1000 + Math.random() * 9000)
+      lovckId: Math.floor(1000 + Math.random() * 9000)
     }
 
     this.saveBlog = this.saveBlog.bind(this);
   }
-
 
   saveBlog(story, heading) {
     const {lockId} = this.state;
