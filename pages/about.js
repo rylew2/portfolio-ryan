@@ -7,7 +7,7 @@ class About extends React.Component {
   render() {
     return (
       <BaseLayout
-        title="Filip Jerga - Learn More About Me"
+        title="Ryan Lewis - Learn More About Me"
         {...this.props.auth}
       >
         <BasePage className="about-page">
@@ -24,7 +24,7 @@ class About extends React.Component {
             <Col md="6">
               <div className="fadein">
                 <p>
-                  My name is Filip Jerga and I am an experienced software
+                  My name is Ryan Lewis and I am an experienced software
                   engineer and freelance developer.{" "}
                 </p>
                 <p>
