@@ -53,7 +53,7 @@ app
   .prepare()
   .then(() => {
     const server = express();
-    server.use(compression());
+    server.use(compression()); //npm package for performance improvement
     server.use(bodyParser.json());
 
     server.use("/api/v1/books", bookRoutes);
