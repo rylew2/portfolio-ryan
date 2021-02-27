@@ -5,3 +5,5 @@
 **.jar
 
 /server/.next
+
+.vscode
