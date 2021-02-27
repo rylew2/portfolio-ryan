@@ -1,5 +1,6 @@
 import FontFaceObserver from 'fontfaceobserver';
 
+//load fonts after page is loaded (load client side)
 const Fonts = () => {
   const montserrat = new FontFaceObserver('Montserrat');
 
