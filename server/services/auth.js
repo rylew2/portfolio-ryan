@@ -1,6 +1,9 @@
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 
+const config = require("../config");
+const NAMESPACE = config.NAMESPACE;
+
 //MIDDLEWARE
 
 // build certificate - same way as our manual check in auth0.js verifyToken()
@@ -26,7 +29,14 @@ exports.checkRole = (role) => {
   return (req, res, next) => {
     const user = req.user;
 
-    if (user && user[process.env.NAMESPACE + "/role"] === role) {
+    //process.env not available on server
+    // if (user && user[process.env.NAMESPACE + "/role"] === role) {
+
+    if (
+      user &&
+      user[NAMESPACE + "/role"] &&
+      user[NAMESPACE + "/role"] === role
+    ) {
       next();
     } else {
       return res.status(401).send({

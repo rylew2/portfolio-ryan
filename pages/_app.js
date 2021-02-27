@@ -11,6 +11,7 @@ class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
     // console.log("_app.js getInitialProps");
 
+    //auth check can slow initial load of application
     let pageProps = {};
     const user = process.browser
       ? await auth0.clientAuth()
