@@ -12,7 +12,7 @@ exports.checkJWT = jwt({
   secret: jwksRsa.expressJwtSecret({
     cache: true, // Default Value
     rateLimit: true,
-    jwksRequestsPerMinute: 15,
+    jwksRequestsPerMinute: 50,
     jwksUri: "https://dev-2osrhxob.us.auth0.com/.well-known/jwks.json",
   }),
   audience: "jPgEKqalXKS1g6ZjPhKYK2rKk9eliUB2", //auth0 clientID
@@ -20,13 +20,13 @@ exports.checkJWT = jwt({
   algorithms: ["RS256"],
 });
 
-const namespace = "http://localhost:3000/";
+// const namespace = "http://localhost:3000/";
 
 exports.checkRole = (role) => {
   return (req, res, next) => {
     const user = req.user;
 
-    if (user && user[namespace + "role"] === role) {
+    if (user && user[process.env.NAMESPACE + "/role"] === role) {
       next();
     } else {
       return res.status(401).send({

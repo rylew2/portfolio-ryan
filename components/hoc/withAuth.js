@@ -2,7 +2,7 @@ import React from "react";
 import BasePage from "../BasePage";
 import BaseLayout from "../layouts/BaseLayout";
 
-const namespace = "http://localhost:3000/";
+// const namespace = "http://localhost:3000/";
 
 // Higher order component that if used, will allow
 export default (role) => {
@@ -19,7 +19,7 @@ export default (role) => {
 
       renderProtectedPage() {
         const { isAuthenticated, user } = this.props.auth;
-        const userRole = user && user[`${namespace}role`];
+        const userRole = user && user[`${process.env.NAMESPACE}/role`];
         let isAuthorized = false;
         console.log("userRole", userRole);
         console.log("role", role);

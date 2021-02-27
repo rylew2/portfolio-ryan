@@ -21,7 +21,7 @@ const portfolioRoutes = require("./routes/portfolio");
 const blogRoutes = require("./routes/blog");
 
 const robotsOptions = {
-  root: path.join(__dirname, "../static"),
+  root: path.join(__dirname, "../static"), //__dirname is server folder - got one up and into static
   headers: {
     "Content-Type": "text/plain;charset=UTF-8",
   },

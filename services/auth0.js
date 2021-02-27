@@ -5,12 +5,14 @@ import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
 import { getCookieFromReq } from "../helpers/utils";
 
+const CLIENT_ID = process.env.CLIENT_ID;
+
 class Auth0 {
   constructor() {
     this.auth0 = new auth0.WebAuth({
       domain: "dev-2osrhxob.us.auth0.com",
-      clientID: "jPgEKqalXKS1g6ZjPhKYK2rKk9eliUB2",
-      redirectUri: "http://localhost:3000/callback",
+      clientID: CLIENT_ID,
+      redirectUri: `${process.env.BASE_URL}/callback`,
       responseType: "token id_token",
       scope: "openid profile",
     });
@@ -60,9 +62,9 @@ class Auth0 {
     // localStorage.setItem("id_token", authResult.idToken);
     // localStorage.setItem("expires_at", expiresAt);
 
-    Cookies.set("user", authResult.idTokenPayload);
+    // Cookies.set("user", authResult.idTokenPayload); //not using at all in app
     Cookies.set("jwt", authResult.idToken);
-    Cookies.set("expiresAt", expiresAt);
+    // Cookies.set("expiresAt", expiresAt); //
   }
 
   login() {
@@ -70,13 +72,15 @@ class Auth0 {
   }
 
   logout() {
-    Cookies.remove("user");
+    // Cookies.remove("user");
     Cookies.remove("jwt");
-    Cookies.remove("expiresAt");
+    // Cookies.remove("expiresAt");
     // newlogout({ returnTo: window.location.origin });
     this.auth0.logout({
-      returnTo: "http://localhost:3000",
-      clientID: "jPgEKqalXKS1g6ZjPhKYK2rKk9eliUB2",
+      // returnTo: "http://localhost:3000",
+      returnTo: process.env.BASE_URL,
+
+      clientID: CLIENT_ID,
     });
   }
 

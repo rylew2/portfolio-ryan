@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "NODE_ENV=production node server/index.js",
     "export": "next build && next export",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build" 
   },
   "keywords": [],
   "author": "",

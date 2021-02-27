@@ -27,17 +27,17 @@
       text-transform: uppercase;
 
       &.active {
-      color: #dba919;
+        color: #dba919;
       }
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         color: #dba919;
       }
     }
   }
 
   .port-dropdown-menu {
-
     .port-dropdown-item {
       color: #4e4e4e;
 
@@ -53,23 +53,17 @@
     }
   }
 }
-$secondary: #2C3E50 !default;
+
+// $secondary: #2c3e50 !default;
 .port-navbar.port-nav-base.port-nav-default {
   padding: 30px;
   background-color: $secondary !important;
 }
 
-
 .bg-transparent.menu-open {
-  background-color: #2C3E50 !important;
+  background-color: #2c3e50 !important;
 }
 
 .bg-transparent.menu-close {
   transition: 1s;
 }
-
-
-
-
-
-

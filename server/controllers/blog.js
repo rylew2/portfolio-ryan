@@ -3,9 +3,11 @@ const slugify = require("slugify");
 const AsyncLock = require("async-lock");
 const lock = new AsyncLock();
 
+// get only published blogs
+// sort to look nice for /blogs route 
 exports.getBlogs = (req, res) => {
   Blog.find({ status: "published" })
-    .sort({ createdAt: -1 })
+    .sort({ createdAt: -1 }) //newest to oldest
     .exec(function (err, publishedBlogs) {
       if (err) {
         return res.status(422).send(err);
@@ -15,6 +17,7 @@ exports.getBlogs = (req, res) => {
     });
 };
 
+//for displaying /blogs/my-blog-post
 exports.getBlogBySlug = (req, res) => {
   const slug = req.params.slug;
 
@@ -39,6 +42,7 @@ exports.getBlogById = (req, res) => {
   });
 };
 
+//get all (draft and published ) blogs
 exports.getUserBlogs = (req, res) => {
   const userId = req.user.sub;
 
@@ -60,6 +64,8 @@ exports.updateBlog = (req, res) => {
       return res.status(422).send(err);
     }
 
+    //when updating blog - we slugify the title
+    // all published blogs should have a slug
     if (blogData.status && blogData.status === "published" && !foundBlog.slug) {
       foundBlog.slug = slugify(foundBlog.title, {
         replacement: "-", // replace spaces with replacement

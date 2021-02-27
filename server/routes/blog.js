@@ -1,29 +1,46 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const blogCtrl = require('../controllers/blog');
-const authService = require('../services/auth');
+const blogCtrl = require("../controllers/blog");
+const authService = require("../services/auth");
 
-router.get('', blogCtrl.getBlogs);
+//get just published blogs
+router.get("", blogCtrl.getBlogs);
 
-router.get('/me', authService.checkJWT,
-                  authService.checkRole('siteOwner'),
-                  blogCtrl.getUserBlogs);
+// routes are registered in order - put more specific routes before general ones
+// the /me route has to be before the :id route
 
-router.get('/:id', blogCtrl.getBlogById);
+//get draft and publish blogs
+router.get(
+  "/me",
+  authService.checkJWT,
+  authService.checkRole("siteOwner"),
+  blogCtrl.getUserBlogs
+);
 
-router.get('/s/:slug', blogCtrl.getBlogBySlug);
+router.get("/:id", blogCtrl.getBlogById);
 
-router.post('', authService.checkJWT,
-                authService.checkRole('siteOwner'),
-                blogCtrl.createBlog);
+router.get("/s/:slug", blogCtrl.getBlogBySlug);
 
-router.patch('/:id', authService.checkJWT,
-                authService.checkRole('siteOwner'),
-                blogCtrl.updateBlog);
+router.post(
+  "",
+  authService.checkJWT,
+  authService.checkRole("siteOwner"),
+  blogCtrl.createBlog
+);
 
-router.delete('/:id', authService.checkJWT,
-                authService.checkRole('siteOwner'),
-                blogCtrl.deleteBlog);
+router.patch(
+  "/:id",
+  authService.checkJWT,
+  authService.checkRole("siteOwner"),
+  blogCtrl.updateBlog
+);
+
+router.delete(
+  "/:id",
+  authService.checkJWT,
+  authService.checkRole("siteOwner"),
+  blogCtrl.deleteBlog
+);
 
 module.exports = router;

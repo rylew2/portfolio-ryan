@@ -1,6 +1,10 @@
 const routes = require("next-routes");
 
 module.exports = routes()
+// map a page to a route
+//.add(page, route)
+
+//order matters - put more specific before more general
   .add("portfolioNew", "/portfolios/new")
   .add("portfolio", "/portfolio/:id")
   .add("portfolioEdit", "/portfolios/:id/edit")

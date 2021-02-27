@@ -29,7 +29,7 @@ const BaseLayout = (props) => {
           property="og:title"
           content="Filip Jerga - programmer, developer, bloger"
         />
-        <meta property="og:locale" content="en_EU" />
+        <meta property="og:locale" content="en_US" />
         <meta property="og:url" content={`${process.env.BASE_URL}`} />
         <meta property="og:type" content="website" />
         <meta

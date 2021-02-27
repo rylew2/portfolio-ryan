@@ -20,17 +20,21 @@
   }
 
   .subtitle {
-    @include animation-detail(2.2s);
+    @include animation-detail(1.3s);
     font-size: 33px;
   }
 
   .subsubTitle {
-    @include animation-detail(3.6s);
+    @include animation-detail(2s);
     font-size: 18px;
   }
 
   @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 }

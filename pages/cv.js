@@ -1,17 +1,34 @@
-import React, { Component } from "react";
+import React from "react";
+import { Col, Row } from "reactstrap";
 import BasePage from "../components/BasePage";
 import BaseLayout from "../components/layouts/BaseLayout";
 
-class CV extends Component {
+class Cv extends React.Component {
   render() {
     return (
       <BaseLayout {...this.props.auth}>
-        <BasePage>
-          <h1>CV page</h1>
+        <BasePage title="Preview of my CV" className="cv-page">
+          <Row>
+            <Col md={{ size: 8, offset: 2 }}>
+              <div className="cv-title">
+                <a
+                  download="jerga_cv.pdf"
+                  className="btn btn-success"
+                  href="/static/jerga_cv.pdf"
+                >
+                  Download
+                </a>
+              </div>
+              <iframe
+                style={{ width: "100%", height: "800px" }}
+                src="/static/jerga_cv.pdf"
+              ></iframe>
+            </Col>
+          </Row>
         </BasePage>
       </BaseLayout>
     );
   }
 }
 
-export default CV;
+export default Cv;

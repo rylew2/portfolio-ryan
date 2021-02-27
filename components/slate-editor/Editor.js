@@ -9,6 +9,8 @@ import { initialValue } from "./initial-value";
 import { renderMark, renderNode } from "./renderers";
 import { rules } from "./rules";
 
+
+
 const html = new Html({ rules });
 
 export default class SlateEditor extends React.Component {
@@ -92,7 +94,6 @@ export default class SlateEditor extends React.Component {
     const { save, isLoading } = this.props;
     const headingValues = this.getTitle();
     const text = html.serialize(value);
-    debugger;
     !isLoading && save(text, headingValues);
   }
 

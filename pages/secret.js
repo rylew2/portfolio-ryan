@@ -11,7 +11,7 @@ class Secret extends Component {
     // const superSecretValue = "Super Secret Value";
 
     const anotherSecretData = await getSecretData(req);
-    console.log(anotherSecretData);
+    // console.log(anotherSecretData);
     return { anotherSecretData };
   }
 

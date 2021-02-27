@@ -2,8 +2,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "next/app";
 import React from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import auth0 from "../services/auth0";
-// import "react-toastify/dist/ReactToastify.css";
 import "../styles/main.scss";
 
 class MyApp extends App {
@@ -18,10 +19,9 @@ class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
-    const namespace = process.env.NAMESPACE
-      ? process.env.NAMESPACE
-      : "http://localhost:3000";
-    const isSiteOwner = user && user[namespace + "/role"] === "siteOwner";
+
+    const isSiteOwner =
+      user && user[process.env.NAMESPACE + "/role"] === "siteOwner";
     const auth = { user, isAuthenticated: !!user, isSiteOwner };
     // console.log("auth: ", auth);
     // console.log("pageProps", pageProps);
@@ -30,7 +30,12 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps, auth } = this.props;
-    return <Component {...pageProps} auth={auth} />;
+    return (
+      <>
+        <ToastContainer />
+        <Component {...pageProps} auth={auth} />
+      </>
+    );
   }
 }
 export default MyApp;

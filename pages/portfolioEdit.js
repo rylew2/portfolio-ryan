@@ -13,7 +13,7 @@ class PortfolioEdit extends React.Component {
 
     try {
       portfolio = await getPortfolioById(query.id);
-      console.log(portfolio);
+      // console.log(portfolio);
     } catch (error) {
       console.error(error);
     }
